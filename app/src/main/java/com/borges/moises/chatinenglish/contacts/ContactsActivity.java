@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.borges.moises.chatinenglish.App;
 import com.borges.moises.chatinenglish.R;
 import com.borges.moises.chatinenglish.chat.ChatActivity;
-import com.borges.moises.chatinenglish.data.model.Contact;
+import com.borges.moises.chatinenglish.data.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsView 
 
     @Inject
     ContactsPresenter mContactsPresenter;
-    @BindView(R.id.contacts)
+    @BindView(R.id.friends)
     RecyclerView mRecyclerView;
 
     private ContactsAdapter mAdapter = new ContactsAdapter();
@@ -49,8 +49,8 @@ public class ContactsActivity extends AppCompatActivity implements ContactsView 
     private void setupRecyclerView() {
         mAdapter.setOnContactClickListener(new OnContactClickListener() {
             @Override
-            public void onClick(Contact contact) {
-                mContactsPresenter.openConversation(contact);
+            public void onClick(User user) {
+                mContactsPresenter.openConversation(user);
             }
         });
         mRecyclerView.setHasFixedSize(true);
@@ -98,8 +98,8 @@ public class ContactsActivity extends AppCompatActivity implements ContactsView 
     }
 
     @Override
-    public void showContacts(List<Contact> contacts) {
-        mAdapter.replaceData(contacts);
+    public void showContacts(List<User> users) {
+        mAdapter.replaceData(users);
     }
 
     @Override
@@ -108,8 +108,8 @@ public class ContactsActivity extends AppCompatActivity implements ContactsView 
     }
 
     @Override
-    public void openConversation(Contact contact) {
-        ChatActivity.start(this,contact);
+    public void openConversation(User user) {
+        ChatActivity.start(this, user);
     }
 
     public static void start(Context context) {
@@ -118,14 +118,14 @@ public class ContactsActivity extends AppCompatActivity implements ContactsView 
     }
 
     interface OnContactClickListener {
-        void onClick(Contact contact);
+        void onClick(User user);
     }
 
     static class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
-        private List<Contact> mContacts = new ArrayList<>();
+        private List<User> mUsers = new ArrayList<>();
         private OnContactClickListener mOnContactClickListener = new OnContactClickListener() {
             @Override
-            public void onClick(Contact contact) {
+            public void onClick(User user) {
 
             }
         };
@@ -138,9 +138,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsView 
             mOnContactClickListener = onContactClickListener;
         }
 
-        public void replaceData(@NonNull List<Contact> contacts) {
-            mContacts.clear();
-            mContacts.addAll(contacts);
+        public void replaceData(@NonNull List<User> users) {
+            mUsers.clear();
+            mUsers.addAll(users);
             notifyDataSetChanged();
         }
 
@@ -153,12 +153,12 @@ public class ContactsActivity extends AppCompatActivity implements ContactsView 
 
         @Override
         public void onBindViewHolder(ContactsAdapter.ViewHolder holder, int position) {
-            final Contact contact = mContacts.get(position);
-            holder.contactName.setText(contact.getName());
+            final User user = mUsers.get(position);
+            holder.contactName.setText(user.getName());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnContactClickListener.onClick(contact);
+                    mOnContactClickListener.onClick(user);
                 }
             });
 
@@ -166,7 +166,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsView 
 
         @Override
         public int getItemCount() {
-            return mContacts.size();
+            return mUsers.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

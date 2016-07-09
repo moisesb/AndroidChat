@@ -14,7 +14,8 @@ import android.widget.TextView;
 
 import com.borges.moises.chatinenglish.App;
 import com.borges.moises.chatinenglish.R;
-import com.borges.moises.chatinenglish.data.model.Contact;
+import com.borges.moises.chatinenglish.data.model.ChatMessage;
+import com.borges.moises.chatinenglish.data.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     ChatPresenter mChatPresenter;
 
     private static final String CONTACT_ARG = "com.borges.moises.chatinenglish.conversation.contact";
-    private Contact mContact;
+    private User mReceiver;
     private ChatAdapter mAdapter = new ChatAdapter();
 
     @Override
@@ -44,7 +45,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         if (getIntent().getExtras() != null) {
-            mContact = (Contact) getIntent().getExtras().getSerializable(CONTACT_ARG);
+            mReceiver = (User) getIntent().getExtras().getSerializable(CONTACT_ARG);
         }
         ButterKnife.bind(this);
         injectDependencies();
@@ -75,7 +76,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     @OnClick(R.id.send_button)
     void onSendClick() {
         final String message = mMessageEditText.getText().toString();
-        mChatPresenter.sendMessage(message,mContact);
+        mChatPresenter.sendMessage(message, mReceiver);
     }
 
     private void injectDependencies() {
@@ -84,14 +85,14 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     private void setupToolbar() {
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(mContact.getName());
+            getSupportActionBar().setTitle(mReceiver.getName());
         }
     }
 
-    public static void start(Context context, Contact contact) {
+    public static void start(Context context, User user) {
         Intent intent = new Intent(context, ChatActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CONTACT_ARG, contact);
+        bundle.putSerializable(CONTACT_ARG, user);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
@@ -107,21 +108,30 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     @Override
-    public void showMessage(String message) {
-        mAdapter.addMessage(message);
+    public void showMessage(ChatMessage chatMessage) {
+        mAdapter.addMessage(chatMessage);
     }
 
+    @Override
+    public void updateMessageStatus(ChatMessage chatMessage) {
+
+    }
+
+    @Override
+    public void showEmptyMessageError() {
+
+    }
 
     static class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
-        private List<String> messages = new ArrayList<>();
+        private List<ChatMessage> messages = new ArrayList<>();
 
         public ChatAdapter() {
             super();
         }
 
-        public void addMessage(String message) {
-            messages.add(0,message);
+        public void addMessage(ChatMessage chatMessage) {
+            messages.add(0,chatMessage);
             notifyItemInserted(0);
         }
 
@@ -134,8 +144,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         @Override
         public void onBindViewHolder(ChatAdapter.ViewHolder holder, int position) {
-            final String message = messages.get(position);
-            holder.messageTextView.setText(message);
+            final ChatMessage chatMessage = messages.get(position);
+            holder.messageTextView.setText(chatMessage.getContent());
         }
 
         @Override

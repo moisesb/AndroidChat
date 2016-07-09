@@ -2,7 +2,7 @@ package com.borges.moises.chatinenglish.contacts;
 
 import android.util.Log;
 
-import com.borges.moises.chatinenglish.data.model.Contact;
+import com.borges.moises.chatinenglish.data.model.User;
 import com.borges.moises.chatinenglish.mvp.Callback;
 import com.borges.moises.chatinenglish.mvp.PresenterMvp;
 
@@ -29,13 +29,13 @@ public class ContactsPresenter implements PresenterMvp<ContactsView> {
             return;
         }
         mContactsView.showLoadingContacts(true);
-        mContactsService.fetchContacts(new Callback<List<Contact>>() {
+        mContactsService.fetchContacts(new Callback<List<User>>() {
             @Override
-            public void onSuccess(List<Contact> contacts) {
+            public void onSuccess(List<User> users) {
                 mContactsView.showLoadingContacts(false);
 
-                if (contacts.size() > 0) {
-                    mContactsView.showContacts(contacts);
+                if (users.size() > 0) {
+                    mContactsView.showContacts(users);
                 }else {
                     mContactsView.showNoContacts();
                 }
@@ -49,11 +49,11 @@ public class ContactsPresenter implements PresenterMvp<ContactsView> {
         });
     }
 
-    public void openConversation(Contact contact) {
+    public void openConversation(User user) {
         if (mContactsView == null) {
             return;
         }
-        mContactsView.openConversation(contact);
+        mContactsView.openConversation(user);
     }
 
     @Override

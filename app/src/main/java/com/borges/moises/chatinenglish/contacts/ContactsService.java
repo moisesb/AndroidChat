@@ -1,6 +1,6 @@
 package com.borges.moises.chatinenglish.contacts;
 
-import com.borges.moises.chatinenglish.data.model.Contact;
+import com.borges.moises.chatinenglish.data.model.User;
 import com.borges.moises.chatinenglish.mvp.Callback;
 
 import org.jivesoftware.smack.roster.Roster;
@@ -24,14 +24,14 @@ public class ContactsService {
         mRoster = roster;
     }
 
-    public void fetchContacts(Callback<List<Contact>> callback){
-        List<Contact> contacts = new ArrayList<>();
+    public void fetchContacts(Callback<List<User>> callback){
+        List<User> users = new ArrayList<>();
         for (RosterEntry entry : mRoster.getEntries()) {
-            Contact contact = new Contact();
-            contact.setName(entry.getName());
-            contact.setUserName(entry.getUser());
-            contacts.add(contact);
+            User user = new User();
+            user.setName(entry.getName());
+            user.setUserName(entry.getUser());
+            users.add(user);
         }
-        callback.onSuccess(contacts);
+        callback.onSuccess(users);
     }
 }

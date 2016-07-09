@@ -9,6 +9,7 @@ import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.offline.OfflineMessageManager;
 
 import java.io.IOException;
 
@@ -55,6 +56,12 @@ public class NetModule {
     @Singleton
     public Roster providesRoster(AbstractXMPPConnection connection) {
         return Roster.getInstanceFor(connection);
+    }
+
+    @Provides
+    @Singleton
+    public OfflineMessageManager providesOfflineMessageManager(AbstractXMPPConnection connection) {
+        return new OfflineMessageManager(connection);
     }
 
     @Provides

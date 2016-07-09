@@ -23,10 +23,12 @@ public class App extends Application {
 
         mNetComponent = DaggerNetComponent.builder()
                 .netModule(new NetModule(HOST_NAME, SERVICE_NAME))
+                .appModule(new AppModule(this))
                 .build();
     }
 
     public NetComponent getNetComponent() {
+
         return mNetComponent;
     }
 }

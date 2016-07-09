@@ -1,6 +1,6 @@
 package com.borges.moises.chatinenglish.contacts;
 
-import com.borges.moises.chatinenglish.data.model.Contact;
+import com.borges.moises.chatinenglish.data.model.User;
 import com.borges.moises.chatinenglish.mvp.ViewMvp;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 public interface ContactsView extends ViewMvp {
     void showLoadingContacts(boolean b);
 
-    void showContacts(List<Contact> contacts);
+    void showContacts(List<User> users);
 
     void showNoContacts();
 
-    void openConversation(Contact contact);
+    void openConversation(User user);
 }

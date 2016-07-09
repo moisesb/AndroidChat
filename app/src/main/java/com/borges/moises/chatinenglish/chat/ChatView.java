@@ -1,5 +1,6 @@
 package com.borges.moises.chatinenglish.chat;
 
+import com.borges.moises.chatinenglish.data.model.ChatMessage;
 import com.borges.moises.chatinenglish.mvp.ViewMvp;
 
 /**
@@ -11,5 +12,9 @@ public interface ChatView extends ViewMvp {
 
     void cleanMessageField();
 
-    void showMessage(String message);
+    void showMessage(ChatMessage chatMessage);
+
+    void updateMessageStatus(ChatMessage chatMessage);
+
+    void showEmptyMessageError();
 }

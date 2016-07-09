@@ -1,7 +1,10 @@
 package com.borges.moises.chatinenglish.login;
 
+import android.content.Context;
+
 import com.borges.moises.chatinenglish.mvp.Callback;
 import com.borges.moises.chatinenglish.mvp.PresenterMvp;
+import com.borges.moises.chatinenglish.receivemessage.ReceiveIncomingMessageService;
 
 import javax.inject.Inject;
 
@@ -12,11 +15,13 @@ import javax.inject.Inject;
 public class LoginPresenter implements PresenterMvp<LoginView> {
 
     private final LoginService mLoginService;
+    private final Context mContext;
     private LoginView mLoginView;
 
     @Inject
-    public LoginPresenter(LoginService loginService) {
+    public LoginPresenter(LoginService loginService, Context context) {
         mLoginService = loginService;
+        mContext = context;
     }
 
     public void login(String userName, String password) {
@@ -39,6 +44,7 @@ public class LoginPresenter implements PresenterMvp<LoginView> {
             @Override
             public void onSuccess(Void data) {
                 mLoginView.showProgress(false);
+                startReceiveIncomingMessagesService();
                 mLoginView.openDashboard();
             }
 
@@ -48,6 +54,10 @@ public class LoginPresenter implements PresenterMvp<LoginView> {
                 mLoginView.userNameAndPasswordInvalid();
             }
         });
+    }
+
+    private void startReceiveIncomingMessagesService() {
+        ReceiveIncomingMessageService.start(mContext);
     }
 
     @Override
