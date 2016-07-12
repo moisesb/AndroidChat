@@ -9,32 +9,13 @@ import java.util.Date;
  */
 
 public class IncomingMessageEvent {
-    private final String mSender;
-    private final String mMessage;
     private ChatMessage mChatMessage;
-    private final long mDate;
 
-    public IncomingMessageEvent(String sender, String message, long date) {
-        mSender = sender;
-        mMessage = message;
-        mDate = date;
-    }
-
-    public String sender() {
-        return mSender;
-    }
-
-    public String message() {
-        return mMessage;
+    public IncomingMessageEvent(ChatMessage chatMessage) {
+        mChatMessage = chatMessage;
     }
 
     public ChatMessage chatMessage() {
         return mChatMessage;
-    }
-
-    public Date date() {
-        final Date date = new Date();
-        date.setTime(mDate);
-        return date;
     }
 }

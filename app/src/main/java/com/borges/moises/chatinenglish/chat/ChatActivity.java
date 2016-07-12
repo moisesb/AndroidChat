@@ -30,7 +30,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @BindView(R.id.message)
     EditText mMessageEditText;
-    @BindView(R.id.chat)
+    @BindView(R.id.chat_messages)
     RecyclerView mChatRecyclerView;
 
     @Inject
@@ -146,6 +146,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         public void onBindViewHolder(ChatAdapter.ViewHolder holder, int position) {
             final ChatMessage chatMessage = messages.get(position);
             holder.messageTextView.setText(chatMessage.getContent());
+            holder.dateTextView.setText(chatMessage.getTime().toString());
         }
 
         @Override
@@ -155,10 +156,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView messageTextView;
+            TextView dateTextView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 messageTextView = (TextView) itemView.findViewById(R.id.message);
+                dateTextView = (TextView) itemView.findViewById(R.id.date);
             }
         }
     }

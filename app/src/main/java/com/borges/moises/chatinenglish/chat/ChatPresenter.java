@@ -1,11 +1,8 @@
 package com.borges.moises.chatinenglish.chat;
 
-import android.util.Log;
-
 import com.borges.moises.chatinenglish.data.model.ChatMessage;
 import com.borges.moises.chatinenglish.data.model.User;
 import com.borges.moises.chatinenglish.events.IncomingMessageEvent;
-import com.borges.moises.chatinenglish.mvp.Callback;
 import com.borges.moises.chatinenglish.mvp.PresenterMvp;
 
 import org.greenrobot.eventbus.EventBus;
@@ -61,7 +58,9 @@ public class ChatPresenter implements PresenterMvp<ChatView> {
     @Override
     public void bindView(ChatView viewMvp) {
         mChatView = viewMvp;
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override

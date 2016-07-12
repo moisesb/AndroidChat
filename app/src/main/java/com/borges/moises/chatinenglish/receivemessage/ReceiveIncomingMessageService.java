@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.borges.moises.chatinenglish.App;
+import com.borges.moises.chatinenglish.data.model.ChatMessage;
 import com.borges.moises.chatinenglish.events.IncomingMessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,7 +51,7 @@ public class ReceiveIncomingMessageService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("ChatApp","Service Created");
+        Log.d("ChatApp", "Service Created");
     }
 
     @Override
@@ -66,7 +67,7 @@ public class ReceiveIncomingMessageService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("ChatApp","Service destroyed");
+        Log.d("ChatApp", "Service destroyed");
     }
 
     private void injectDependecies() {
@@ -96,10 +97,11 @@ public class ReceiveIncomingMessageService extends Service {
                         @Override
                         public void processMessage(Chat chat, Message message) {
                             if (message.getBody() != null) {
-                                Log.d("ChatApp", message.getBody() + "");
-                                Log.d("ChatApp", chat.getParticipant());
-                                Date date = new Date();
-                                EventBus.getDefault().post(new IncomingMessageEvent(message.getFrom(),message.getBody(),date.getTime()));
+                                ChatMessage chatMessage = createChatMessage(message, chat);
+                                if (chatMessage != null) {
+                                    notifyChatMessageReceived(chatMessage);
+                                }
+
                             }
                         }
                     });
@@ -108,8 +110,24 @@ public class ReceiveIncomingMessageService extends Service {
         });
     }
 
+    private void notifyChatMessageReceived(ChatMessage chatMessage) {
+        EventBus.getDefault().post(new IncomingMessageEvent(chatMessage));
+    }
+
+    private ChatMessage createChatMessage(Message message, Chat chat) {
+        if (message.getBody() == null) {
+            return null;
+        }
+
+        Date date = new Date();
+        final String content = message.getBody();
+        final String receiver = "moisesb";
+        ChatMessage chatMessage = new ChatMessage(content, receiver, date, 1);
+        return chatMessage;
+    }
+
     public static void start(Context context) {
-        Intent intent = new Intent(context,ReceiveIncomingMessageService.class);
+        Intent intent = new Intent(context, ReceiveIncomingMessageService.class);
         context.startService(intent);
     }
 }
